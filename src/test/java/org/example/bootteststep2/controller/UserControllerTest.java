@@ -50,11 +50,11 @@ public class UserControllerTest {
         given(userService.findById(1L)).willReturn(Optional.of(testUser));
         // When & Then
         mockMvc.perform(get("/{id}", 1L))
-                // 응답 코드
+                // HTTP 상태 코드 검증
                 .andExpect(status().isOk()) // 200
-                // 미디어 타입
+                // Content-Type 검증
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                // 응답 결과
+                // JSON 응답 검증
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("모기"))
                 .andExpect(jsonPath("$.age").value(1))
@@ -64,4 +64,5 @@ public class UserControllerTest {
     }
 
     // POST
+    // ... 생략?
 }
