@@ -83,4 +83,24 @@ public class UserServiceTest {
         verify(userRepository).existsByEmail("nine@digital.com");
         verify(userRepository).save(newUser);
     }
+
+    @Test
+    @DisplayName("사용자 생성 - 이메일 중복")
+    void createUserTest_EmailAlreadyExist() {
+        // Given
+        User newUser = new User("아구몬", "nine@digital.com", 9);
+        given(userRepository.existsByEmail("nine@digital.com")).willReturn(true); // 어? 너??
+//        given(userRepository.save(any(User.class)))
+//                .willReturn(testUser);
+
+        // When & Then
+        assertThatThrownBy(() -> userService.createUser(newUser))
+                .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessage("이미 존재하는 이메일");
+
+        // Mock 호출 검증
+        verify(userRepository).existsByEmail("nine@digital.com"); // 중복확인은 하고...
+//        verify(userRepository).save(newUser);
+        verify(userRepository, never()).save(any(User.class)); // 저장한 적이 없는지
+    }
 }
