@@ -158,4 +158,21 @@ public class UserServiceTest {
         // Mock 호출 검증
         verify(userRepository).findById(1L);
     }
+
+    @Test
+    @DisplayName("ID로 사용자 조회 - 사용자 없음")
+    void getUserById_NotFound() {
+        // Given
+        given(userRepository.findById(999L)
+        ).willReturn(Optional.empty());
+
+        // When
+        Optional<User> result = userService.findById(999L);
+
+        // Then
+        assertThat(result).isEmpty();
+
+        // Mock 호출 검증
+        verify(userRepository).findById(999L);
+    }
 }
