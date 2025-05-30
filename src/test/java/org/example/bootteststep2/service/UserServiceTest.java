@@ -1,7 +1,40 @@
 package org.example.bootteststep2.service;
 
+import org.example.bootteststep2.entity.User;
+import org.example.bootteststep2.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+// 일반적으로...
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @DisplayName("UserService 단위 테스트")
+@ExtendWith(MockitoExtension.class) // 가짜 객체 -> 의존성 주입
 public class UserServiceTest {
+    @Mock
+    private UserRepository userRepository; // 의존성 주입 당할 대상
+    @InjectMocks
+    private UserService userService; // 의존성 주입을 할 대상
+    private User testUser;
+
+    @BeforeEach
+    void setUp() {
+        testUser = new User("아리아나 그란데", "tall@starbucks.com", 30);
+        testUser.setId(1L); // 편의상... 테스트에서 직접해줘야 함
+    }
+
+    @Test
+    @DisplayName("Mockito 기본 동작 확인")
+    void mockitoBasicTest() {
+        // given, when, then.
+
+    }
 }
