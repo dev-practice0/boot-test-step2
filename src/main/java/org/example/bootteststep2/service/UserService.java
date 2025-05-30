@@ -17,7 +17,7 @@ public class UserService {
 
     // 사용자 생성
     public User createUser(User user) {
-        // 유효성 검증 추가 예정... (이메일, 이름, 나이)
+        // 유효성 검증 (이메일, 이름, 나이)
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일");
         }

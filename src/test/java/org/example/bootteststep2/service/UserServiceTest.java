@@ -38,19 +38,26 @@ public class UserServiceTest {
     @DisplayName("Mockito 기본 동작 확인")
     void mockitoBasicTest() {
         // Given - Mock 동작 정의 (BDD - Behavior-Driven Development)
+        // TDD -> BDD
+        // 테스트 주도 개발, 행동 주도 개발 (given.when.then)
         given(userRepository.existsByEmail("test@example.com")).willReturn(false);
+        // "test@example.com" -> false
         given(userRepository.save(any(User.class))).willReturn(testUser);
+        // save -> testUser
 
         // When - 실제 메서드 호출
         User newUser = new User("테스트", "test@example.com", 30);
         User savedUser = userService.createUser(newUser);
+        // savedUser ? -> newUser??? -> testUser.
+        // 겉으로 보기엔 createUser만 호출이 되었지만...
+        // 속에는...? 여러 유효성 검증들이 있어요... (repository)
 
         // Then - 결과 검증
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getName()).isEqualTo("홍길동"); // Mock이 반환한 데이터
 
         // Mock 호출 검증
-        verify(userRepository).existsByEmail("test@example.com");
+        verify(userRepository).existsByEmail("test@example.com"); // 이거 호출 된 적 있어요?
         verify(userRepository).save(any(User.class));
     }
 }
