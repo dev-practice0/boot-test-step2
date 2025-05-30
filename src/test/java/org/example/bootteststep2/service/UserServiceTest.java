@@ -11,7 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 // 일반적으로...
-import static org.junit.jupiter.api.Assertions.*;
+// import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -34,7 +35,22 @@ public class UserServiceTest {
     @Test
     @DisplayName("Mockito 기본 동작 확인")
     void mockitoBasicTest() {
-        // given, when, then.
+        // Given (BDD style)
+        // Mock 동작을 정의
+        given(userRepository.existsByEmail("short@startbucks.com"))
+                .willReturn(false);
+        given(userRepository.save(any(User.class)))
+                .willReturn(testUser);
+        // When - 실제 메서드 호출
+        User newUser = new User("아이유", "jeju@samdasu.com", 30);
+        User savedUser = userService.createUser(newUser);
 
+        // Then - 결과 검증
+        assertThat(savedUser).isNotNull();
+        assertThat(savedUser.getName()).isEqualTo("아리아나 그란데"); // Mock이 반환한 데이터
+
+        // Mock 호출 검증
+        verify(userRepository).existsByEmail("jeju@samdasu.com");
+        verify(userRepository).save(any(User.class));
     }
 }
