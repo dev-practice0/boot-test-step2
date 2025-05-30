@@ -103,4 +103,38 @@ public class UserServiceTest {
 //        verify(userRepository).save(newUser);
         verify(userRepository, never()).save(any(User.class)); // 저장한 적이 없는지
     }
+
+    @Test
+    @DisplayName("사용자 생성 - 빈 이름")
+    void createUserTest_EmptyName() {
+        // Given
+        User newUser = new User("", "nine@digital.com", 9);
+        given(userRepository.existsByEmail("nine@digital.com")).willReturn(false);
+
+        // When & Then
+        assertThatThrownBy(() -> userService.createUser(newUser))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("빈 이름");
+
+        // Mock 호출 검증
+        verify(userRepository).existsByEmail("nine@digital.com"); // 중복확인은 하고...
+        verify(userRepository, never()).save(any(User.class)); // 저장한 적이 없는지
+    }
+
+    @Test
+    @DisplayName("사용자 생성 - 나이가 음수")
+    void createUserTest_NegativeAge() {
+        // Given
+        User newUser = new User("아구몬", "nine@digital.com", -9);
+        given(userRepository.existsByEmail("nine@digital.com")).willReturn(false);
+
+        // When & Then
+        assertThatThrownBy(() -> userService.createUser(newUser))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("나이는 양수여야 함");
+
+        // Mock 호출 검증
+        verify(userRepository).existsByEmail("nine@digital.com"); // 중복확인은 하고...
+        verify(userRepository, never()).save(any(User.class)); // 저장한 적이 없는지
+    }
 }
