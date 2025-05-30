@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 // 일반적으로...
 // import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -136,5 +138,24 @@ public class UserServiceTest {
         // Mock 호출 검증
         verify(userRepository).existsByEmail("nine@digital.com"); // 중복확인은 하고...
         verify(userRepository, never()).save(any(User.class)); // 저장한 적이 없는지
+    }
+
+    @Test
+    @DisplayName("ID로 사용자 조회")
+    void getUserById() {
+        // Given
+        given(userRepository.findById(1L)
+            ).willReturn(Optional.of(testUser));
+
+        // When
+        Optional<User> result = userService.findById(1L);
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get().getName()).isEqualTo("피카츄");
+        assertThat(result.get().getEmail()).isEqualTo("electric_mouse@poke.com");
+
+        // Mock 호출 검증
+        verify(userRepository).findById(1L);
     }
 }
