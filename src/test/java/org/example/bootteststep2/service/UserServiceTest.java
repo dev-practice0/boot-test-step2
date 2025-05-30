@@ -29,7 +29,7 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         // 각 테스트에서 사용할 공통 테스트 데이터
-        testUser = new User("홍길동", "hong@example.com", 25);
+        testUser = new User("피카츄", "electric_mouse@poke.com", 25);
         // 실제로는 DB에서 생성되는 ID를 임의로 설정
         testUser.setId(1L); // 테스트에서만 가능 (실제로는 DB가 생성)
     }
@@ -54,10 +54,33 @@ public class UserServiceTest {
 
         // Then - 결과 검증
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getName()).isEqualTo("홍길동"); // Mock이 반환한 데이터
+        assertThat(savedUser.getName()).isEqualTo("피카츄"); // Mock이 반환한 데이터
 
         // Mock 호출 검증
         verify(userRepository).existsByEmail("test@example.com"); // 이거 호출 된 적 있어요?
         verify(userRepository).save(any(User.class));
+    }
+
+    // 사용자 생성 테스트
+    @Test
+    @DisplayName("사용자 생성 - 정상 케이스")
+    void createUserTest() {
+        // Given
+        User newUser = new User("아구몬", "nine@digital.com", 9);
+        given(userRepository.existsByEmail("nine@digital.com")).willReturn(false); // 너 mocking으로 조회해보면 없어~
+        given(userRepository.save(any(User.class)))
+                .willReturn(testUser);
+
+        // When
+        User result = userService.createUser(newUser);
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("피카츄");
+        assertThat(result.getEmail()).isEqualTo("electric_mouse@poke.com");
+
+        // Mock 호출 검증
+        verify(userRepository).existsByEmail("nine@digital.com");
+        verify(userRepository).save(newUser);
     }
 }
