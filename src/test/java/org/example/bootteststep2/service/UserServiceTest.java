@@ -37,7 +37,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Mockito 기본 동작 확인")
     void mockitoBasicTest() {
-        // Given - Mock 동작 정의
+        // Given - Mock 동작 정의 (BDD - Behavior-Driven Development)
         given(userRepository.existsByEmail("test@example.com")).willReturn(false);
         given(userRepository.save(any(User.class))).willReturn(testUser);
 
